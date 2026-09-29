@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Repo settings</title>
+    <script src="sdpi-components.js"></script>
+    <script src="connection.js"></script>
+    <link rel="stylesheet" href="pi.css" />
+  </head>
+  <body>
+    <div id="ci-connection"></div>
+
+    <div class="requires-setup" hidden>
+      <sdpi-item label="Repo">
+        <sdpi-select setting="repoKey" datasource="getRepos" hot-reload placeholder="Select a repo" loading="Loading repos…"></sdpi-select>
+      </sdpi-item>
+
+      <p class="hint">
+        The key shows the status of the last run as its color, the branch, the duration and a strip of the recent runs.
+        Press the key to open the run in the browser, hold it to restart the run. The repo name is drawn on the key;
+        if you set your own title, the name is left out.
+      </p>
+    </div>
+  </body>
+</html>

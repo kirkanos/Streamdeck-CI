@@ -1,0 +1,94 @@
+{
+  "$schema": "https://schemas.elgato.com/streamdeck/plugins/manifest.json",
+  "UUID": "com.kirkanos.ci",
+  "Name": "CI Glance",
+  "Version": "0.0.0.0",
+  "Author": "Andreas Hacker",
+  "Description": "Woodpecker CI and GitHub Actions pipelines at a glance: last run status, branch and duration per repo, a summary of failed repos, restart from the key or dial.",
+  "URL": "https://github.com/kirkanos/Streamdeck-CI",
+  "Icon": "images/icon",
+  "Category": "CI Glance",
+  "CategoryIcon": "images/category",
+  "CodePath": "bin/plugin.js",
+  "SDKVersion": 3,
+  "Nodejs": {
+    "Version": "24",
+    "Debug": "enabled"
+  },
+  "Software": {
+    "MinimumVersion": "7.1"
+  },
+  "OS": [
+    {
+      "Platform": "mac",
+      "MinimumVersion": "12"
+    },
+    {
+      "Platform": "windows",
+      "MinimumVersion": "10"
+    }
+  ],
+  "Actions": [
+    {
+      "UUID": "com.kirkanos.ci.repo",
+      "Name": "Repo",
+      "Icon": "images/actions/repo",
+      "Tooltip": "Last run of one repo: status color, branch, duration and the recent runs; press to open the run, hold to restart it",
+      "PropertyInspectorPath": "ui/repo.html",
+      "Controllers": [
+        "Keypad"
+      ],
+      "SupportedInMultiActions": false,
+      "States": [
+        {
+          "Image": "images/key",
+          "TitleAlignment": "top",
+          "FontSize": 10
+        }
+      ]
+    },
+    {
+      "UUID": "com.kirkanos.ci.summary",
+      "Name": "Summary",
+      "Icon": "images/actions/summary",
+      "Tooltip": "Number of repos whose last run failed; press to cycle through them, hold to open the shown run",
+      "PropertyInspectorPath": "ui/summary.html",
+      "Controllers": [
+        "Keypad"
+      ],
+      "SupportedInMultiActions": false,
+      "States": [
+        {
+          "Image": "images/key",
+          "TitleAlignment": "top",
+          "FontSize": 10
+        }
+      ]
+    },
+    {
+      "UUID": "com.kirkanos.ci.dial",
+      "Name": "Dial Repo",
+      "Icon": "images/actions/dial",
+      "Tooltip": "Browse your repos with the dial; push to restart the last run, tap to open it",
+      "PropertyInspectorPath": "ui/dial.html",
+      "Controllers": [
+        "Encoder"
+      ],
+      "Encoder": {
+        "layout": "layouts/dial.json",
+        "Icon": "images/actions/dial",
+        "TriggerDescription": {
+          "Rotate": "Next / previous repo",
+          "Push": "Restart the last run",
+          "Touch": "Open the last run"
+        }
+      },
+      "SupportedInMultiActions": false,
+      "States": [
+        {
+          "Image": "images/key"
+        }
+      ]
+    }
+  ]
+}

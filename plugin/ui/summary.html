@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Summary settings</title>
+    <script src="sdpi-components.js"></script>
+    <script src="connection.js"></script>
+    <link rel="stylesheet" href="pi.css" />
+  </head>
+  <body>
+    <div id="ci-connection"></div>
+
+    <div class="requires-setup" hidden>
+      <sdpi-item label="Repos">
+        <sdpi-select setting="provider" default="all">
+          <option value="all">All providers</option>
+          <option value="woodpecker">Woodpecker only</option>
+          <option value="github">GitHub Actions only</option>
+        </sdpi-select>
+      </sdpi-item>
+
+      <p class="hint">
+        Shows how many repos have a failed last run; the key turns red as soon as one has. Press the key to cycle
+        through the failed repos, hold it to open the shown run in the browser.
+      </p>
+    </div>
+  </body>
+</html>
