@@ -1,6 +1,6 @@
 # Streamdeck-CI
 
-Stream Deck plugin `com.kirkanos.ci`. Status: plan only, no code yet.
+Stream Deck plugin `com.kirkanos.ci`. Status: M1–M4 done, released 1.0.0.
 
 ## Goal
 
