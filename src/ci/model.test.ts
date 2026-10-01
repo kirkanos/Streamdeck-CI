@@ -84,7 +84,7 @@ describe("summarize", () => {
   });
 
   it("is empty without repos", () => {
-    expect(summarize([])).toEqual({ failed: 0, success: 0, running: 0, other: 0, total: 0, failedRepos: [] });
+    expect(summarize([])).toEqual({ failed: 0, success: 0, running: 0, other: 0, total: 0, failedRepos: [], runningRepos: [] });
   });
 });
 

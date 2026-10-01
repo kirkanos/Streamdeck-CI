@@ -51,7 +51,7 @@
       "UUID": "com.kirkanos.ci.summary",
       "Name": "Summary",
       "Icon": "images/actions/summary",
-      "Tooltip": "Number of repos whose last run failed; press to cycle through them, hold to open the shown run",
+      "Tooltip": "Number of repos whose last run failed; press to cycle through the failed and running repos, hold to open the shown run",
       "PropertyInspectorPath": "ui/summary.html",
       "Controllers": [
         "Keypad"

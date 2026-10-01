@@ -7,24 +7,25 @@ import streamDeck, {
   type WillAppearEvent,
   type WillDisappearEvent,
 } from "@elgato/streamdeck";
-import { summarize, type SummaryFilter } from "../ci/model";
+import { attentionRepos, summarize, type SummaryFilter } from "../ci/model";
 import { ci } from "../ci/service";
 import { PLUGIN_ID } from "../config";
 import { LongPress } from "../press";
-import { failedRepoKey, messageKey, summaryKey } from "../render/keys";
+import { detailRepoKey, messageKey, summaryKey } from "../render/keys";
 import { showImage, updates } from "../throttle";
 import { runUrl } from "./repo";
 
 export type SummarySettings = { provider?: SummaryFilter };
 
-/** How long a failed repo stays on the key after a press before the summary returns. */
+/** How long a failed or running repo stays on the key after a press before the summary returns. */
 export const DETAIL_MS = 8_000;
 
 type Detail = { index: number; timer: ReturnType<typeof setTimeout> };
 
 /**
  * Number of repos whose last run failed; pressing the key cycles through the
- * failed repos, holding it opens the shown run in the browser.
+ * failed repos and then the running ones, holding it opens the shown run in
+ * the browser.
  */
 @action({ UUID: `${PLUGIN_ID}.summary` })
 export class SummaryAction extends SingletonAction<SummarySettings> {
@@ -53,8 +54,8 @@ export class SummaryAction extends SingletonAction<SummarySettings> {
   override onKeyDown(ev: KeyDownEvent<SummarySettings>): void {
     this.#press.down(ev.action.id, async () => {
       const detail = this.#details.get(ev.action.id);
-      const failed = summarize(ci.repos(), ev.payload.settings.provider).failedRepos;
-      const repo = detail ? failed[detail.index] : undefined;
+      const repos = attentionRepos(summarize(ci.repos(), ev.payload.settings.provider));
+      const repo = detail ? repos[detail.index] : undefined;
       if (repo) {
         await streamDeck.system.openUrl(runUrl(repo));
       } else {
@@ -68,14 +69,14 @@ export class SummaryAction extends SingletonAction<SummarySettings> {
       return;
     }
     const id = ev.action.id;
-    const failed = summarize(ci.repos(), ev.payload.settings.provider).failedRepos;
+    const repos = attentionRepos(summarize(ci.repos(), ev.payload.settings.provider));
     const previous = this.#details.get(id);
     this.#clearDetail(id);
-    if (failed.length === 0) {
+    if (repos.length === 0) {
       await this.#render(id);
       return;
     }
-    const index = previous ? (previous.index + 1) % failed.length : 0;
+    const index = previous ? (previous.index + 1) % repos.length : 0;
     this.#details.set(id, {
       index,
       timer: setTimeout(() => {
@@ -114,9 +115,10 @@ export class SummaryAction extends SingletonAction<SummarySettings> {
     }
     const summary = summarize(ci.repos(), filter);
     const detail = this.#details.get(actionId);
-    const shown = detail ? summary.failedRepos[detail.index] : undefined;
+    const repos = attentionRepos(summary);
+    const shown = detail ? repos[detail.index] : undefined;
     if (detail && shown) {
-      showImage(key, failedRepoKey(shown, detail.index + 1, summary.failedRepos.length));
+      showImage(key, detailRepoKey(shown, detail.index + 1, repos.length));
       return;
     }
     if (summary.total === 0) {

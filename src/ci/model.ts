@@ -109,11 +109,18 @@ export type Summary = {
   total: number;
   /** Repos whose last run failed, sorted by name. */
   failedRepos: Repo[];
+  /** Repos whose last run is still running, sorted by name. */
+  runningRepos: Repo[];
 };
+
+/** Repos worth a look on the summary key: failed ones first, then running ones. */
+export function attentionRepos(summary: Summary): Repo[] {
+  return [...summary.failedRepos, ...summary.runningRepos];
+}
 
 /** Counts repos by the status of their most recent run. */
 export function summarize(repos: Repo[], filter: SummaryFilter = "all"): Summary {
-  const summary: Summary = { failed: 0, success: 0, running: 0, other: 0, total: 0, failedRepos: [] };
+  const summary: Summary = { failed: 0, success: 0, running: 0, other: 0, total: 0, failedRepos: [], runningRepos: [] };
   for (const repo of [...repos].sort(byName)) {
     if (filter !== "all" && repo.provider !== filter) {
       continue;
@@ -129,6 +136,7 @@ export function summarize(repos: Repo[], filter: SummaryFilter = "all"): Summary
         break;
       case "running":
         summary.running++;
+        summary.runningRepos.push(repo);
         break;
       default:
         summary.other++;

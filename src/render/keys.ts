@@ -1,4 +1,4 @@
-import { PROVIDER_LABEL, type Repo, type RunStatus, type Summary, type SummaryFilter } from "../ci/model";
+import { lastRunStatus, PROVIDER_LABEL, type Repo, type RunStatus, type Summary, type SummaryFilter } from "../ci/model";
 import { background, mix, ringSegment, svg, text, toDataUrl, truncate, wrapText } from "./svg";
 import { STATUS_COLOR, STATUS_LABEL, THEME } from "./theme";
 
@@ -130,9 +130,10 @@ export function summaryKey(filter: SummaryFilter, summary: Summary): string {
   return toDataUrl(svg(S, S, bg + header + ring + center));
 }
 
-/** One failed repo shown on the summary key while cycling through them (index counted from 1). */
-export function failedRepoKey(repo: Repo, index: number, count: number): string {
+/** One failed or running repo shown on the summary key while cycling through them (index counted from 1). */
+export function detailRepoKey(repo: Repo, index: number, count: number): string {
   const run = repo.runs[0];
+  const status: RunStatus = lastRunStatus(repo) === "running" ? "running" : "failure";
   const lines = wrapText(repo.name, 11, 2);
   const names = lines.map((line, i) => text(line, { x: S / 2, y: 62 + i * 21, size: 19 })).join("");
   const branch = run?.branch ? text(truncate(run.branch, 16), { x: S / 2, y: 62 + lines.length * 21, size: 13, weight: 600, opacity: 0.75 }) : "";
@@ -141,9 +142,9 @@ export function failedRepoKey(repo: Repo, index: number, count: number): string 
     svg(
       S,
       S,
-      statusBackground("failure", S, S) +
+      statusBackground(status, S, S) +
         `<rect x="8" y="8" width="${S - 16}" height="30" rx="9" fill="#000000" fill-opacity="0.3"/>` +
-        text(`${index} / ${count} failed`, { x: S / 2, y: 29, size: 16 }) +
+        text(`${index} / ${count} ${STATUS_LABEL[status]}`, { x: S / 2, y: 29, size: 16 }) +
         names +
         branch +
         runStrip(stripStatuses(repo), 10, 122, S - 20, 12, 12),

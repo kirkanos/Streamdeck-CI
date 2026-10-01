@@ -11,7 +11,7 @@ Unofficial plugin, not affiliated with the Woodpecker CI project or GitHub.
   * The repo name (left out if you set your own title on the key), the branch and the duration of the last run (elapsed time while it is running).
   * A strip with the most recent runs.
   * Pressing the key opens the run in the browser, holding it restarts the run.
-* **Summary** key: how many repos have a failed last run, with a ring of passed / failed / running repos. The key turns red as soon as one repo has failed. Optionally limited to one provider.
+* **Summary** key: how many repos have a failed last run, with a ring of passed / failed / running repos. The key turns red as soon as one repo has failed. Pressing it cycles through the failed repos and then the running ones (red or amber, with branch and run strip); holding it opens the shown run. Optionally limited to one provider.
   * Pressing it cycles through the failed repos on the key (name, branch, recent runs); holding it opens the shown run in the browser. After a few seconds the key returns to the summary.
 * **Dial Repo** (Stream Deck + / + XL): turn the dial to browse the repos, push to restart the last run, tap the touch strip to open it. The touch strip shows name, branch, duration and the recent runs.
 * Both providers side by side in one repo picker:

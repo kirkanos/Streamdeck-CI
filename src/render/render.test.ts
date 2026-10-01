@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { Repo, Run } from "../ci/model";
 import { dialCanvas, dialMessage } from "./dial";
-import { failedRepoKey, messageKey, repoKey, runCaption, runStrip, stripStatuses, summaryKey } from "./keys";
+import { detailRepoKey, messageKey, repoKey, runCaption, runStrip, stripStatuses, summaryKey } from "./keys";
 import { escapeXml, mix, wrapText } from "./svg";
 import { STATUS_COLOR } from "./theme";
 
@@ -101,14 +101,14 @@ describe("run strip", () => {
 
 describe("summary key", () => {
   it("draws a full green ring and 'all green' when nothing failed", () => {
-    const svg = decode(summaryKey("all", { failed: 0, success: 3, running: 0, other: 0, total: 3, failedRepos: [] }));
+    const svg = decode(summaryKey("all", { failed: 0, success: 3, running: 0, other: 0, total: 3, failedRepos: [], runningRepos: [] }));
     expect(svg).toContain("all green");
     expect(svg).toContain(">All CI<");
     expect(svg).not.toContain("<path");
   });
 
   it("shows the failed count on a red background", () => {
-    const svg = decode(summaryKey("github", { failed: 2, success: 1, running: 0, other: 0, total: 3, failedRepos: [] }));
+    const svg = decode(summaryKey("github", { failed: 2, success: 1, running: 0, other: 0, total: 3, failedRepos: [], runningRepos: [] }));
     expect(svg).toContain(">2<");
     expect(svg).toContain(">failed<");
     expect(svg).toContain(">GitHub<");
@@ -119,13 +119,13 @@ describe("summary key", () => {
   });
 
   it("shows running pipelines when nothing failed", () => {
-    const svg = decode(summaryKey("woodpecker", { failed: 0, success: 1, running: 1, other: 0, total: 2, failedRepos: [] }));
+    const svg = decode(summaryKey("woodpecker", { failed: 0, success: 1, running: 1, other: 0, total: 2, failedRepos: [], runningRepos: [] }));
     expect(svg).toContain(">running<");
     expect(svg).toContain(">Woodpecker<");
   });
 
   it("shows a failed repo with its position while cycling", () => {
-    const svg = decode(failedRepoKey(repo({ runs: [run({ status: "failure", branch: "release" })] }), 2, 3));
+    const svg = decode(detailRepoKey(repo({ runs: [run({ status: "failure", branch: "release" })] }), 2, 3));
     expect(svg).toContain("2 / 3 failed");
     expect(svg).toContain(">compose<");
     expect(svg).toContain(">release<");
